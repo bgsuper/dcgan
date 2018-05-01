@@ -9,7 +9,7 @@ DCGAN employs a generator network (G) which maps a vector in 100 dimension space
 
 Generator and discriminator network are trained simultaneously. During the training, the generator has been trained to produce images analog to the real images. The discriminator is trained to separate the generated and the real images.
 
-![alt tag](DCGAN.jpg)
+![alt tag](dcgan.jpg)
 
 ## Results 
 
