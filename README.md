@@ -5,7 +5,7 @@ DCGAN  is short for [Deep Convolutional Generative Adversarial Networks](https:/
 
 ## DCGAN network
 
-DCGAN employs a generator network (G) which maps a vector in 100 dimension space to an image. The structure is demonstrated below (from original paper). Another part of the DCGAD is called a discriminator network (D). Discriminator network is a binary classifier (true or false). Given an image, the discriminator checks if the image is a real image or generated from the 100 vector. 
+DCGAN employs a generator network (G) which generates images from vectors in a 100 dimensional space. The structure of generator is demonstrated below (from original paper). Another part of the DCGAN is called a discriminator network (D). Discriminator network is a binary classifier (true or false). Given an image (from generated images or the real dataset), the discriminator checks if the image is a real image or generated from a 100 vector. 
 
 Generator and discriminator network are trained simultaneously. During the training, the generator has been trained to produce images analog to the real images. The discriminator is trained to separate the generated and the real images.
 
