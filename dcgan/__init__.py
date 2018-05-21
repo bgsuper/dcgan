@@ -12,9 +12,7 @@ FLAGS = tf.app.flags.FLAGS
 """AFFECTS HOW CODE RUNS"""
 
 tf.app.flags.DEFINE_string('model', 'dcgan_mnist',
-                           """ Defining what version of the model to run """)
-tf.app.flags.DEFINE_string('model', 'dcgan_wasserstein',
-                           """ Run the wasserstein version of the model """)
+                           """ Defining what version of the model to run: 'dcgan_mnist' or 'dcgan_wasserstein' """)
 
 #Model specific parameters
 tf.app.flags.DEFINE_integer('latent_dim', "100",
@@ -96,6 +94,12 @@ if(FLAGS.model == "dcgan_mnist" or FLAGS.model == "basic_dropout"):
                             """ Initializer for the convolutional layers. One of: "xavier", "var_scale".  """)
     tf.app.flags.DEFINE_string('optimizer', "SGD",
                             """ Optimizer for training. One of: "adam", "SGD", "momentum", "adagrad". """)
+
+elif(FLAGS.model == "dcgan_wasserstein" ):
+    tf.app.flags.DEFINE_string('conv_init', 'var_scale', # xavier / var_scale
+                            """ Initializer for the convolutional layers. One of "msra", "xavier", "var_scale".  """)
+    tf.app.flags.DEFINE_string('optimizer', "rmsp",
+                            """ Optimizer for training.  "RMSP". """)
 
 elif(FLAGS.model == "extended" or FLAGS.model == "extended_dropout"):
     tf.app.flags.DEFINE_string('conv_init', 'var_scale', # xavier / var_scale
