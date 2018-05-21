@@ -3,9 +3,13 @@ import numpy as np
 FLAGS = tf.app.flags.FLAGS
 
 
-def loss_cal(logits, labels, name):
-    loss = tf.reduce_mean(
-        tf.nn.sigmoid_cross_entropy_with_logits(logits=logits, labels=labels, name=name))
+def loss_cal(out, labels, name):
+    if FLAGS.model == 'dcgan_wasserstein':
+        loss = tf.reduce_mean(out)
+    else:
+        loss = tf.reduce_mean(
+            tf.nn.sigmoid_cross_entropy_with_logits(logits=out, labels=labels, name=name))
+
     return loss
 
 

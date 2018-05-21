@@ -35,22 +35,29 @@ def train():
         print("Add operators to graph")
         images_generated = dcgan.generator(generator_input, is_training, keep_prob)
         # dcgan.generator(generator_input, is_training=is_training, keep_prob=keep_prob)
-        _, discriminator_logits_real = dcgan.discriminator(images_real, is_training=is_training, keep_prob=keep_prob, reuse=False)
-        _, generator_logits = dcgan.discriminator(images_generated, is_training=is_training, keep_prob=keep_prob, reuse=True)
+        discriminator_real, discriminator_logits_real = dcgan.discriminator(images_real, is_training=is_training, keep_prob=keep_prob, reuse=False)
+        discriminator_fake, generator_logits = dcgan.discriminator(images_generated, is_training=is_training, keep_prob=keep_prob, reuse=True)
 
         discriminator_logits_fake = generator_logits
 
         labels_real_ = np.ones([FLAGS.batch_size, 1, 1, 1]).astype('float32')
         labels_fake_ = np.zeros([FLAGS.batch_size, 1, 1, 1]).astype('float32')
 
-        discriminator_loss_real = dcgan.loss_cal(discriminator_logits_real, labels_real_, name="disc_loss_real")
-        discriminator_loss_fake = dcgan.loss_cal(discriminator_logits_fake, labels_fake_, name="disc_loss_real")
-        discriminator_loss = 0.5*discriminator_loss_real + 0.5*discriminator_loss_fake
-        generator_loss = dcgan.loss_cal(generator_logits, labels_real_, name="gen_loss")
-
         vars_trainable = tf.trainable_variables()
         vars_disctriminator = [var for var in vars_trainable if var.name.startswith('discriminator')]
         vars_generator = [var for var in vars_trainable if var.name.startswith('generator')]
+
+        if FLAGS.model == 'dcgan_wasserstein':
+            discriminator_loss_real = dcgan.loss_cal(discriminator_logits_real, labels_real_, name="disc_loss_real")
+            discriminator_loss_fake = dcgan.loss_cal(discriminator_logits_fake, labels_fake_, name="disc_loss_fake")
+            discriminator_loss = 0.5*discriminator_loss_real + 0.5*discriminator_loss_fake
+            generator_loss = dcgan.loss_cal(generator_logits, labels_real_, name="gen_loss")
+        else:
+
+            discriminator_loss_real = dcgan.loss_cal(discriminator_real, labels_real_, name="disc_loss_real")
+            discriminator_loss_fake = dcgan.loss_cal(discriminator_fake, labels_fake_, name="disc_loss_fake")
+            discriminator_loss = 0.5 * discriminator_loss_real - 0.5 * discriminator_loss_fake
+            generator_loss = -dcgan.loss_cal(discriminator_fake, labels_real_, name="gen_loss")
 
         discriminator_train_op, global_step = dcgan.training(discriminator_loss, vars_disctriminator, learning_rate=0.0000004)
         generator_train_op, global_step = dcgan.training(generator_loss, vars_generator, learning_rate=0.00002)

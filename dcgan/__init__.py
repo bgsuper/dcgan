@@ -13,6 +13,8 @@ FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string('model', 'dcgan_mnist',
                            """ Defining what version of the model to run """)
+tf.app.flags.DEFINE_string('model', 'dcgan_wasserstein',
+                           """ Run the wasserstein version of the model """)
 
 #Model specific parameters
 tf.app.flags.DEFINE_integer('latent_dim', "100",
